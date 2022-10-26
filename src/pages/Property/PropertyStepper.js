@@ -25,7 +25,6 @@ export default function PropertyStepper(props) {
   const [IsSuccess, setIsSuccess] = useState(false);
   const [IsError, setIsError] = useState(false);
   const [ErrorMessage, setErrorMessage] = useState("");
-  var UserToken = JSON.parse(localStorage.getItem('MppApp'));
   const steps = ["Property Information", "Address Information", "Image"];
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -38,29 +37,27 @@ export default function PropertyStepper(props) {
   let ImageLIst = counter.propertyImage[counter.propertyImage.length - 1];
 
   const handleSubmit = () => {
-    ;
+   const user = JSON.parse(localStorage.getItem('user'));
+   const jwt = JSON.parse(localStorage.getItem('jwt'));
+  
     let formData = new FormData();
     
 
     if (propertyInfo !== undefined) {
-      formData.append("user_id", propertyInfo.user_id);
-      formData.append("capacity", propertyInfo.capacity);
+      formData.append("userEmail",user.email );
+      formData.append("propertyName", propertyInfo.propertyName);
+      formData.append("price", propertyInfo.price);
       formData.append("title", propertyInfo.title);
-      formData.append("price_per_night", propertyInfo.price_per_night);
-      formData.append("space", propertyInfo.space);
-      formData.append("type", propertyInfo.type);
-      formData.append("bath_room_number", propertyInfo.bath_room_number);
-      formData.append("bed_number", propertyInfo.bed_number);
-      formData.append("bed_room_number", propertyInfo.bed_room_number);
-      formData.append("description", "test");
-      formData.append("property_description",propertyInfo.property_description );
+      formData.append("status", false);
+      
+
     }
 
     if (addressInfo !== undefined) {
       formData.append("city", addressInfo.city);
       formData.append("country", addressInfo.country);
-      formData.append("lat", addressInfo.lat);
-      formData.append("lon", addressInfo.lon);
+      formData.append("latitude", addressInfo.lat);
+      formData.append("longitude", addressInfo.lon);
       formData.append("state", addressInfo.state);
       formData.append("street_number", addressInfo.street_number);
       formData.append("zip_code", addressInfo.zip_code);
@@ -74,26 +71,43 @@ export default function PropertyStepper(props) {
     }
 
     const config = {
-      Authorization: 'Bearer ' + UserToken?.jwt,
-      headers: { "content-type": "multipart/form-data" },
+      
+      headers: {
+         Authorization: 'Bearer ' + jwt,
+         "content-type": "multipart/form-data",
+         "Access-Control-Allow-Origin": "*"
+        },
     };
-    let url = process.env.REACT_APP_BASE_URL + "/property";
+    let url ="http://35.222.89.242:8081/api/property/create";
+    
+    axios.post(url,formData,config).then(response =>{
+      console.log(response.data);
+      setIsSuccess(true)
+      setIsError(false)
+      setTimeout(function(){
+              window.location.href = '/';
+           }, 3000);
+    }).catch(err => {
+      console.log(err)
+      setIsError(true)
+    })
 
-    axios
-      .post(url, formData, config)
-      .then((response) => {
-        debugger;
-        setIsSuccess(true);
-        console.log(response);
-        setTimeout(function(){
-          window.location.href = '/';
-       }, 3000);
-      })
-      .catch((error) => {
-        debugger;
-        console.log(error);
-        setIsError(true);
-      });
+    // axios
+    //   .post(url, formData, config)
+    //   .then((response) => {
+    //     debugger;
+    //     setIsSuccess(true);
+    //     console.log(response);
+    //     setTimeout(function(){
+    //       window.location.href = '/';
+    //    }, 3000);
+    //   })
+    //   .catch((error) => {
+    //     debugger;
+    //     console.log(error);
+    //     setIsError(true);
+    //   });
+  
   };
 
   const handleNext = (newValues) => {

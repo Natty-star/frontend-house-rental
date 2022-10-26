@@ -25,49 +25,46 @@ const theme = createTheme();
 export default function SignUp() {
 
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [loginError, setLoginError] = useState("");
-  const [logedin, setLogedin] = useState(false);
 
-  const handleSubmit = async (event) => {
+
+  const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
     console.log({
       email: data.get('email'),
       password: data.get('password'),
-      country: data.get('country'),
+      address: {country:data.get('country')},
       firstName: data.get('firstName'),
-      lastName: data.get('lastName')
+      lastName: data.get('lastName'),
+      roles: [
+        {
+            "name": role
+        }]
     });
 
-    try{
-      const response = await axios.post(process.env.REACT_APP_BASE_URL+'/AppUser',{
-        userName: data.get('email'),
+    
+      axios.post('http://35.222.89.242:8081/api/accounts/register',{
+       
+        email: data.get('email'),
         password: data.get('password'),
+        address: {country:data.get('country')},
         firstName: data.get('firstName'),
         lastName: data.get('lastName'),
-        address: {
-          country: data.get('country')
-        },
         roles: [
           {
-            roleType: role
-          }
-        ]
-    })
+              "name": role
+          }]
+    }).then(response =>{
+      navigate("/login");
 
-    navigate("/login");
-    setLoading(false);
-    }catch(error){
-      setLoginError('You have entered invalid username or password!')
-      console.log(error);
-      setLoading(false);
-    }
+    }).catch(err => console.log(err))
+   
   };
 
   useEffect(() => {
     console.log('start')
-    let localValue = localStorage.getItem('MppApp')
+    let localValue = localStorage.getItem('jwt')
     if(localValue){
       navigate("/");
     }else{
@@ -78,7 +75,7 @@ export default function SignUp() {
 
   const [role, setRole] = React.useState('');
 
-  const handleRoleChaneg = (event) => {
+  const handleRoleChange = (event) => {
     console.log(event.target.value)
     setRole(event.target.value);
   };
@@ -163,10 +160,10 @@ export default function SignUp() {
                   id="demo-simple-select"
                   value={role}
                   label="Role"
-                  onChange={handleRoleChaneg}
+                  onChange={handleRoleChange}
                 >
-                  <MenuItem value={"GUEST"}>GUEST</MenuItem>
-                  <MenuItem value={"HOST"}>HOST</MenuItem>
+                  <MenuItem value={"user"}>GUEST</MenuItem>
+                  <MenuItem value={"admin"}>HOST</MenuItem>
                 </Select>
               </FormControl>
               </Grid>

@@ -10,7 +10,6 @@ export default function ImageInformation() {
   let [Files, setFiles] = useState([]);
 
   let handleChange = (e) => {
-    debugger;
     setFiles([]);
     for(let i = 0; i < e.target.files.length; i++){
       Files.push({
@@ -26,13 +25,13 @@ export default function ImageInformation() {
 
   return (
     <div className="form-inline u-margin-huge">
-      <div class="row mb-2">
-        <div class="col-md-10">
-          <label for="formFileMultiple" class="form-label">
+      <div className="row mb-2">
+        <div className="col-md-10">
+          <label htmlFor="formFileMultiple" className="form-label">
             Property Images
           </label>
           <input
-            class="form-control"
+            className="form-control"
             type="file"
             id="formFileMultiple"
             multiple

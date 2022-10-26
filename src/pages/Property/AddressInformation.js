@@ -1,18 +1,25 @@
-import * as React from 'react';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import addAddressInformation from '../../redux/actions/addAddressInformationAction';
+import * as React from "react";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import { useState, forwardRef, useImperativeHandle, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import addAddressInformation from "../../redux/actions/addAddressInformationAction";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { Box, display } from "@mui/system";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
- const AddressInformation = forwardRef((props, ref) => { 
-  ;
+const AddressInformation = forwardRef((props, ref) => {
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [locationEnabled, setLocationEnabled] = useState(false);
   const dispatch = useDispatch();
   const counter = useSelector((state) => state);
-  let prevInfo = counter.addressInformation[counter.addressInformation.length - 1];
+  let prevInfo = 
+    counter.addressInformation[counter.addressInformation.length - 1]
+
   const [addressData, setAddressData] = useState({
     country: prevInfo ? prevInfo.country : null,
     city: prevInfo ? prevInfo.city : null,
@@ -23,17 +30,60 @@ import addAddressInformation from '../../redux/actions/addAddressInformationActi
     lon: prevInfo ? prevInfo.lon : null,
   });
   const handleChange = (event) => {
-    ;
     const { name, value } = event.target;
-   
+    console.log(value)
     setAddressData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-  
-    dispatch(addAddressInformation(addressData));
+    
+   
   };
+  useEffect(()=>{
+    dispatch(addAddressInformation(addressData));
 
+  },[addressData])
+
+  function handleLocation() {
+    let la;
+    let lo;
+    if (!locationEnabled) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            if (position) {
+              la = position.coords.latitude;
+              lo = position.coords.longitude;
+              setLatitude(la);
+              setLongitude(lo);
+              // const latEvent = {
+              //   target:{
+              //     name:"lat",
+              //     value:'20'
+              //   }
+              // }
+          //  let e =   new Event('target',{name:"lat", value:"20"})
+              //handleChange(latEvent);
+              addressData.lat = la;
+              addressData.lon = lo;
+              setAddressData({ ...addressData });
+              console.log(addressData);
+              
+            }
+          },
+          (error) => console.log(error)
+        );
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+
+      setLocationEnabled(true);
+    } else {
+      setLatitude(null);
+      setLongitude(null);
+      setLocationEnabled(false);
+    }
+  }
 
   return (
     <React.Fragment>
@@ -45,7 +95,7 @@ import addAddressInformation from '../../redux/actions/addAddressInformationActi
             fullWidth
             autoComplete="country"
             variant="standard"
-            defaultValue={prevInfo ? prevInfo.country : null}
+            defaultValue={prevInfo ? prevInfo.country : latitude}
             onChange={handleChange}
           />
         </Grid>
@@ -85,7 +135,7 @@ import addAddressInformation from '../../redux/actions/addAddressInformationActi
             onChange={handleChange}
           />
         </Grid>
-   
+
         <Grid item xs={12} sm={6}>
           <TextField
             id="lat"
@@ -93,27 +143,37 @@ import addAddressInformation from '../../redux/actions/addAddressInformationActi
             label="Lat"
             fullWidth
             variant="standard"
+            // value={latitude}
             defaultValue={prevInfo ? prevInfo.lat : null}
             onChange={handleChange}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-
-            id="lon"
-            name="lon"
-            label="Lon"
-            fullWidth
-            autoComplete="shipping postal-code"
-            variant="standard"
-            defaultValue={prevInfo ? prevInfo.lon : null}
-            onChange={handleChange}
-          />
+          <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+            <TextField
+              id="lon"
+              name="lon"
+              label="Lon"
+              fullWidth
+              variant="standard"
+              // value={longitude}
+              defaultValue={prevInfo ? prevInfo.lon : null}
+              onChange={handleChange}
+            />
+            <div onClick={handleLocation}>
+              {locationEnabled ? (
+                <LocationOnIcon sx={{ color: "#FF385C", mr: 1, my: 0.5 }} />
+              ) : (
+                <LocationOnOutlinedIcon
+                  sx={{ color: "#FF385C", mr: 1, my: 0.5 }}
+                />
+              )}
+            </div>
+          </Box>
         </Grid>
 
         <Grid item xs={12} sm={6}>
           <TextField
-
             id="streetNumber"
             name="street_number"
             label="Street Number"
@@ -128,4 +188,4 @@ import addAddressInformation from '../../redux/actions/addAddressInformationActi
     </React.Fragment>
   );
 });
-export default  AddressInformation;
+export default AddressInformation;

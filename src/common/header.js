@@ -79,7 +79,8 @@ export default function Header() {
   };
 
   const handleLogout = () =>{
-    localStorage.removeItem("MppApp")
+    localStorage.removeItem("user")
+    localStorage.removeItem("jwt")
     navigate("/login");
   }
 
@@ -91,22 +92,23 @@ export default function Header() {
     navigate('/hostProperties')
   }
 
-  const handleMyList = () => {
-    navigate('/admin')
+  const handleMyProfile = () => {
+    navigate('/profile')
   }
 
   const [firstLetter, setFirstLetter] = useState("");
   const [logedin, setLogedin] = useState(false);
 
   useEffect(() => {
-    let localValue = JSON.parse(localStorage.getItem('MppApp'))
-    if(!localValue){
-      navigate("/");
-    }else{
-      setFirstLetter(localValue.myUserDetailService.username[0].toUpperCase() )
+    let localValue = JSON.parse(localStorage.getItem('user'))
+    // if(!localValue){
+    //   navigate("/");
+    // }
+    if(localValue){
+      setFirstLetter(localValue.firstName[0].toUpperCase() )
       let roles = []
-      for(const element of localValue.myUserDetailService.authorities){
-        roles.push(element.authority)
+      for(const element of localValue.roles){
+        roles.push(element.name)
       }
       console.log(roles)
       setRole(roles)
@@ -118,11 +120,11 @@ export default function Header() {
   return (
     <>
       <header>
-        <div class="navbar navbar-light bg-light shadow-sm">
-          <div class="container d-flex justify-content-between">
-            <Link to="/" class="logo d-flex align-items-center">
+        <div className="navbar navbar-light bg-light shadow-sm">
+          <div className="container d-flex justify-content-between">
+            <Link to="/" className="logo d-flex align-items-center">
               <strong className="heading-2 mr-5 pr-5">
-                <i class="fas fa-home"></i>Mpp
+                <i className="fas fa-home"></i>House Rental
               </strong>
             </Link>
 
@@ -193,19 +195,26 @@ export default function Header() {
                   <Avatar />
                   Sign up
                 </MenuItem>}
-                {role.includes("HOST") ? <MenuItem onClick={handleHost}>
+                {role.includes("admin") ? <MenuItem onClick={handleHost}>
                   
                   Host your Home
                 </MenuItem>: null}
-                {role.includes("HOST") ? <MenuItem onClick={handleMyHost}>
+                {role.includes("admin") ? <MenuItem onClick={handleMyHost}>
                   
                   My Hosts
                 </MenuItem>: null}
-                {role.includes("GUEST") ? <MenuItem onClick={handleMyReservation}>
+                {role.includes("user") ? <MenuItem onClick={handleMyReservation}>
                   
                   My Reservation
                 </MenuItem>: null}
-                {role.includes("ADMIN") ? <MenuItem onClick={handleMyList}>
+                {role.includes("user") ? <MenuItem onClick={handleMyProfile}>
+                  <ListItemIcon>
+                    <Settings fontSize="small" />
+                  </ListItemIcon>
+                  Profile
+                </MenuItem>:null}
+
+                {role.includes("ADMIN") ? <MenuItem >
                   <ListItemIcon>
                     <Settings fontSize="small" />
                   </ListItemIcon>

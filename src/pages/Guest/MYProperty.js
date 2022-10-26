@@ -125,28 +125,17 @@ export default function MYProperty() {
   };
 
   useEffect(() => {
-    axios({
-      headers: {
-        "Access-Control-Allow-Credentials": true,
-      },
-      method: "get",
-      url:
-        process.env.REACT_APP_BASE_URL +
-        `/reservation/reservationByUserId/${UserToken.myUserDetailService.id}`,
-    })
-      .then((response) => {
-        ;
-        console.log(response.data.property);
-        setData(response.data);
-      })
-      .catch((error) => {
-        ;
-        console.log("error" + error.message);
-      });
+    axios.get('http://localhost:8084/api/reservation/zedshif123@gmail.com')
+    .then(response =>{
+      setData(response.data)
+      console.log(response.data);
+    }).catch(err=>console.log(err))
+   
   }, []);
   return (
     <>
-    <Header/>
+    {/* <Header/> */}
+    
       <div className="container  custom-cards">
         <div className="row my-5">
           {data?.length > 0 ? (
@@ -155,7 +144,7 @@ export default function MYProperty() {
                 <div className="col-md-4 mb-5">
                   <div class="home">
                     <img
-                      src={row.property.cover_image}
+                      src={row.images[0]}
                       alt="House 1"
                       class="home__img"
                     ></img>
@@ -184,9 +173,7 @@ export default function MYProperty() {
                 </div>
               );
             })
-          ) : (
-            <div>Loading</div>
-          )}
+          ) : null}
         </div>
       </div>
 

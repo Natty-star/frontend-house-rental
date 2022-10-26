@@ -20,9 +20,7 @@ export default function ReservationDate() {
 
 
   const handleStartDate = (newValue) => {
-    ;
     setStartDate(newValue);
-
     newValue = Moment().format(newValue.getFullYear() + 
     "-" + ("0" + (newValue.getMonth() + 1)).slice(-2) + "-" + 
     ("0" + newValue.getDate()).slice(-2));

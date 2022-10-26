@@ -43,7 +43,8 @@ export default function Checkout(props) {
   const [ErrorMessage, setErrorMessage] = useState("");
   const [activeStep, setActiveStep] = useState(0);
 
-  var UserToken = JSON.parse(localStorage.getItem("MppApp"));
+  let UserToken = JSON.parse(localStorage.getItem("user"));
+  let token = JSON.parse(localStorage.getItem('jwt'));
   let [reservationData, setReservationData] = useState([]);
 
   const handleNext = () => {
@@ -52,13 +53,11 @@ export default function Checkout(props) {
     setIsError(false);
     var startDate = localStorage.getItem("StartDate");
     var endDate = localStorage.getItem("endDate");
-    let url =
-      process.env.REACT_APP_BASE_URL +
-      `/reservation/${UserToken.myUserDetailService.id}/${id}`;
-
+    let url = 'http://localhost:8081/api/reservation/'+UserToken?.email
+   
     axios({
       headers: {
-        Authorization: "Bearer " + UserToken?.jwt,
+        Authorization: "Bearer " + token,
         "Access-Control-Allow-Credentials": true,
       },
       method: "post",
@@ -69,7 +68,6 @@ export default function Checkout(props) {
       },
     })
       .then((response) => {
-        ;
         console.log(response);
         setReservationData(response.data);
         setActiveStep(activeStep + 1);

@@ -17,18 +17,12 @@ const PropertyInformation = forwardRef((props, ref) => {
   ;
   const dispatch = useDispatch();
   const counter = useSelector((state) => state);
-  var UserToken = JSON.parse(localStorage.getItem('MppApp'));
   let prevInfo = counter.propertyInformation[counter.propertyInformation.length - 1];
   const [propertyData, setPropertyData] = useState({
-    title: prevInfo ? prevInfo.title : null,
-    type: prevInfo ? prevInfo.type : "HOME",
-    bath_room_number: prevInfo ? prevInfo.bath_room_number : null,
-    price_per_night: prevInfo ? prevInfo.price_per_night : null,
-    bed_number: prevInfo ? prevInfo.bed_number : null,
-    bed_room_number: prevInfo ? prevInfo.bed_room_number : null,
-    property_description: prevInfo ? prevInfo.property_description : null,
-    user_id: UserToken?.myUserDetailService.id,
-    space: prevInfo ? prevInfo.space : "SHARED_ROOM",
+    propertyName: prevInfo ? prevInfo.propertyName : null,
+    title: prevInfo ? prevInfo.title : "HOME",
+    price: prevInfo ? prevInfo.price : null,
+    description: prevInfo ? prevInfo.description : null,
     capacity: prevInfo ? prevInfo.capacity : null,
   });
 
@@ -40,8 +34,11 @@ const PropertyInformation = forwardRef((props, ref) => {
       ...prevState,
       [name]: value,
     }));
-    dispatch(addPropertyInformation(propertyData));
+    
   };
+  useEffect(()=>{
+    dispatch(addPropertyInformation(propertyData));
+  },[propertyData])
 
   return (
     <React.Fragment>
@@ -49,12 +46,12 @@ const PropertyInformation = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <TextField
             required
-            name="title"
-            label="Property Title"
+            name="propertyName"
+            label="Property Name"
             fullWidth
             autoComplete="cc-name"
             variant="standard"
-            defaultValue={prevInfo ? prevInfo.title : null}
+            defaultValue={prevInfo ? prevInfo.propertyName : null}
             onChange={handleChange}
           />
         </Grid>
@@ -65,10 +62,10 @@ const PropertyInformation = forwardRef((props, ref) => {
         </InputLabel>
         <NativeSelect
          required
-          name="type"
+          name="title"
           onChange={handleChange}
         >
-           <option disabled value="">Select Property</option>
+          <option disabled value="">Select Property</option>
           <option value={"HOME"}>HOME</option>
           <option value={"APARTMENT"}>APPARTMENT</option>
 
@@ -80,44 +77,17 @@ const PropertyInformation = forwardRef((props, ref) => {
         <Grid item xs={12} md={6}>
           <TextField
             
-            name="price_per_night"
+            name="price"
             label="Price Per Night"
             fullWidth
             autoComplete="cc-csc"
             variant="standard"
-            defaultValue={prevInfo ? prevInfo.price_per_night : null}
+            defaultValue={prevInfo ? prevInfo.price : null}
             onChange={handleChange}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            
-            name="bath_room_number"
-            label="Bath Room Number"
-            fullWidth
-            autoComplete="cc-csc"
-            variant="standard"
-            defaultValue={prevInfo ? prevInfo.bath_room_number : null}
-            onChange={handleChange}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-        <FormControl fullWidth>
-        <InputLabel variant="standard" htmlFor="uncontrolled-native">
-          Property Space
-        </InputLabel>
-        <NativeSelect
-          name="space"
-          onChange={handleChange}
-        >
-           <option disabled value="">Select Property</option>
-          <option value={"SHARED_ROOM"}>SHARED_ROOM</option>
-          <option value={"ENTIRE_PLACE"}>ENTIRE_PLACE</option>
-          <option value={"PRIVATE_ROOM"}>PRIVATE_ROOM</option>
-
-        </NativeSelect>
-      </FormControl>
-        </Grid>
+       
+   
         <Grid item xs={12} md={6}>
           <TextField
             
@@ -130,40 +100,18 @@ const PropertyInformation = forwardRef((props, ref) => {
             onChange={handleChange}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            
-            name="bed_room_number"
-            label="Bed Room Number"
-            fullWidth
-            autoComplete="cc-csc"
-            variant="standard"
-            defaultValue={prevInfo ? prevInfo.bed_room_number : null}
-            onChange={handleChange}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField
-            
-            name="bed_number"
-            label="Bed Number"
-            fullWidth
-            autoComplete="cc-csc"
-            variant="standard"
-            defaultValue={prevInfo ? prevInfo.bed_number : null}
-            onChange={handleChange}
-          />
-        </Grid>
+      
+      
 
         <Grid item xs={12}>
           <TextField
         
-          name="property_description"
+          name="description"
             label="Property Description"
             fullWidth
             autoComplete="cc-exp"
             variant="standard"
-            defaultValue={prevInfo ? prevInfo.property_description : null}
+            defaultValue={prevInfo ? prevInfo.description : null}
             onChange={handleChange}
           />
         </Grid>

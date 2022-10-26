@@ -17,44 +17,45 @@ import {useEffect, useState} from 'react'
 import axios from "axios";
 import { useNavigate, Route } from "react-router-dom";
 import Header from '../../common/header';
+import jwt_decode from "jwt-decode";
 
 const theme = createTheme();
 
 export default function LogIn() {
 
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+
   const [loginError, setLoginError] = useState("");
-  const [logedin, setLogedin] = useState(false);
-  const [roles, setRoles] = useState([]);
-  const [firstLetter, setFirstLetter] = useState("");
 
   const handleSubmit = async(event) => {
-    setLoading(true);
+    console.log("here");
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    
-    try{
-      const response = await axios.post(process.env.REACT_APP_BASE_URL+'/login',{
-      username: data.get('email'),
-      password: data.get('password')
-    })
+    let token;
 
-    localStorage.setItem('MppApp', JSON.stringify(response.data));
 
-    setRoles(roles)
-    navigate("/");
-    setLoading(false);
-    }catch(error){
+    axios.post('http://35.222.89.242:8081/api/authentication/authenticate', {
+        username : data.get('email'),
+        password:data.get('password')
+    }).then(response =>{
+        console.log(response.data)
+        let jwt = response.data.jwt
+        localStorage.setItem('jwt',JSON.stringify(jwt))
+        let decoded = jwt_decode(jwt)
+        let user = (JSON.parse(decoded.sub));
+        localStorage.setItem('user',JSON.stringify(user))
+        navigate('/')
+        
+    }).catch(err =>{
+      console.log(err)
       setLoginError('You have entered invalid username or password!')
-      console.log(error);
-      setLoading(false);
-    }
+    })
+  
   };
 
   useEffect(() => {
     console.log('start')
-    let localValue = localStorage.getItem('MppApp')
+    let localValue = localStorage.getItem('jwt')
     if(localValue){
       navigate("/");
     }else{

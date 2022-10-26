@@ -47,6 +47,7 @@ export default function Profile() {
   }, []);
 
   function handleSubmit(event) {
+    
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const updatedUser = {
@@ -64,6 +65,7 @@ export default function Profile() {
       preferredPayment:data.get('preferredPayment'),
       paymentMethods:[paymentInfo]
     };
+
     console.log(updatedUser);
 
     axios
@@ -232,6 +234,7 @@ export default function Profile() {
                       value={paymentType}
                       label="Paymnet Type"
                       onChange={changePaymentType}
+                      name="paymentType"
                     >
                       <MenuItem value={"Choose Payment Method"}>
                         Choose Payment Type
@@ -288,7 +291,7 @@ export default function Profile() {
                   <TextField
                     defaultValue={userState.address?.zipcode}
                     id="zip"
-                    name="zip"
+                    name="zipcode"
                     label="Zip / Postal code"
                     fullWidth
                   />

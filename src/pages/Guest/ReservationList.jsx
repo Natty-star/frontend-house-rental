@@ -27,7 +27,11 @@ export default function ReservationList() {
     const user = JSON.parse(localStorage.getItem('user'))
     const email = user.email;
     axios
-      .get("http://35.222.89.242:8081/api/reservation/"+email)
+      .get("http://35.222.89.242:8081/api/reservation/"+email,{
+        headers: {
+          Authorization: "Bearer " + parsedJwt,
+        }
+      })
       .then((response) => {
         setProperty(response.data);
         for (const pr in response.data){

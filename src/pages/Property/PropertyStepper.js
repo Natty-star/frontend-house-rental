@@ -79,6 +79,8 @@ export default function PropertyStepper(props) {
         },
     };
     let url ="http://35.222.89.242:8081/api/property/create";
+    console.log(formData.get('latitude'));
+    console.log(formData.get('propertyName'));
     
     axios.post(url,formData,config).then(response =>{
       console.log(response.data);

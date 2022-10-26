@@ -17,8 +17,9 @@ const AddressInformation = forwardRef((props, ref) => {
   const [locationEnabled, setLocationEnabled] = useState(false);
   const dispatch = useDispatch();
   const counter = useSelector((state) => state);
-  let prevInfo = 
+  let [prevInfo,setPrevInfo] = useState(
     counter.addressInformation[counter.addressInformation.length - 1]
+  )
 
   const [addressData, setAddressData] = useState({
     country: prevInfo ? prevInfo.country : null,
@@ -43,6 +44,12 @@ const AddressInformation = forwardRef((props, ref) => {
     dispatch(addAddressInformation(addressData));
 
   },[addressData])
+  useEffect(()=>{
+    console.log('lat',latitude);
+    console.log('prevInfo',prevInfo);
+    dispatch(addAddressInformation(addressData));
+
+  },[prevInfo])
 
   function handleLocation() {
     let la;
@@ -67,6 +74,11 @@ const AddressInformation = forwardRef((props, ref) => {
               addressData.lat = la;
               addressData.lon = lo;
               setAddressData({ ...addressData });
+              prevInfo = {
+                lat:la,
+                lon:lo
+              }
+              setPrevInfo({...prevInfo})
               console.log(addressData);
               
             }
@@ -95,7 +107,7 @@ const AddressInformation = forwardRef((props, ref) => {
             fullWidth
             autoComplete="country"
             variant="standard"
-            defaultValue={prevInfo ? prevInfo.country : latitude}
+            defaultValue={prevInfo ? prevInfo.country : null}
             onChange={handleChange}
           />
         </Grid>
@@ -103,9 +115,9 @@ const AddressInformation = forwardRef((props, ref) => {
           <TextField
             id="city"
             name="city"
-            label="State"
+            label="City"
             fullWidth
-            autoComplete="family-name"
+            autoComplete="city"
             variant="standard"
             defaultValue={prevInfo ? prevInfo.city : null}
             onChange={handleChange}
@@ -115,9 +127,9 @@ const AddressInformation = forwardRef((props, ref) => {
           <TextField
             id="state"
             name="state"
-            label="City"
+            label="State"
             fullWidth
-            autoComplete="city"
+            autoComplete="state"
             variant="standard"
             defaultValue={prevInfo ? prevInfo.state : null}
             onChange={handleChange}
@@ -144,7 +156,7 @@ const AddressInformation = forwardRef((props, ref) => {
             fullWidth
             variant="standard"
             // value={latitude}
-            defaultValue={prevInfo ? prevInfo.lat : null}
+            defaultValue={prevInfo ? prevInfo.lat : latitude}
             onChange={handleChange}
           />
         </Grid>
@@ -157,7 +169,7 @@ const AddressInformation = forwardRef((props, ref) => {
               fullWidth
               variant="standard"
               // value={longitude}
-              defaultValue={prevInfo ? prevInfo.lon : null}
+              defaultValue={prevInfo ? prevInfo.lon : longitude}
               onChange={handleChange}
             />
             <div onClick={handleLocation}>

@@ -16,11 +16,11 @@ export default function Home() {
     <>
  <Header/>
      
-      <div className="row story_background">
+      {/* <div className="row story_background">
           <div className="col-md-6 equal">
             <div className="story__pictures">
               <img
-                src={HeroImageOne}
+                src={"https://dvyvvujm9h0uq.cloudfront.net/com/articles/1585857381-790431-photo-by-ann-danilina-on-unsplashjpg.jpg"}
                 alt="Couple with new house"
                 className="story__img--1"
               ></img>
@@ -45,7 +45,7 @@ export default function Home() {
               <button className="btn">Find your Favorite home</button>
             </div>
           </div>
-        </div>
+        </div> */}
         <AllProperty/>
     </>
   );

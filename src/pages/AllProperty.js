@@ -3,7 +3,9 @@ import Header from "../common/header";
 import { useEffect, useState } from "react";
 import { useNavigate, Route } from "react-router-dom";
 import axios from "axios";
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Fab } from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { textAlign } from "@mui/system";
 export default function AllProperty() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -27,10 +29,21 @@ export default function AllProperty() {
     getProperties();
   }, []);
 
+  function handleNearMe(){
+    // axios.get('http://35.222.89.242:8081/api/property/')
+  }
   return (
     <>
       {/* <Header /> */}
+
+      
       <div className="container  custom-cards">
+      <Box sx={{ "& > :not(style)": { m: 1 } , textAlign:'right' }} mt={2} mb={0} onClick={handleNearMe}>
+        <Fab  variant="extended">
+          <LocationOnIcon sx={{ mr: 1 }} />
+          Find Near Me
+        </Fab>
+      </Box>
         <div className="row my-5">
           {data.length > 0 ? (
             data.map((row, index, arr) => {
@@ -74,11 +87,6 @@ export default function AllProperty() {
             <div>{<CircularProgress color="secondary" />}</div>
           )}
         </div>
-      </div>
-      <div className="text-center u-margin-huge">
-        <a href="#" className="btn-custome btn--green">
-          Discover all Homes
-        </a>
       </div>
     </>
   );

@@ -12,8 +12,13 @@ export default function HostProperties() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
+    const jwt = JSON.parse(localStorage.getItem('jwt'))
     axios
-      .get("http://35.222.89.242:8081/api/property/getAll")
+      .get("http://35.222.89.242:8081/api/property/getByEmail?userEmail="+user.email,{
+        headers:{
+          Authorization: 'Bearer ' + jwt
+        }
+      })
       .then((response) => {
         setData(response.data);
       })

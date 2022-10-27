@@ -4,7 +4,13 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { useState, forwardRef, useImperativeHandle, useEffect } from "react";
+import {
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+  reset,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import addAddressInformation from "../../redux/actions/addAddressInformationAction";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -17,9 +23,9 @@ const AddressInformation = forwardRef((props, ref) => {
   const [locationEnabled, setLocationEnabled] = useState(false);
   const dispatch = useDispatch();
   const counter = useSelector((state) => state);
-  let [prevInfo,setPrevInfo] = useState(
+  let [prevInfo, setPrevInfo] = useState(
     counter.addressInformation[counter.addressInformation.length - 1]
-  )
+  );
 
   const [addressData, setAddressData] = useState({
     country: prevInfo ? prevInfo.country : null,
@@ -32,24 +38,20 @@ const AddressInformation = forwardRef((props, ref) => {
   });
   const handleChange = (event) => {
     const { name, value } = event.target;
-    console.log(value)
+    console.log(value);
     setAddressData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-    
-   
   };
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(addAddressInformation(addressData));
-
-  },[addressData])
-  useEffect(()=>{
-    console.log('lat',latitude);
-    console.log('prevInfo',prevInfo);
+  }, [addressData]);
+  useEffect(() => {
+    console.log("lat", latitude);
+    console.log("prevInfo", prevInfo);
     dispatch(addAddressInformation(addressData));
-
-  },[prevInfo])
+  }, [prevInfo]);
 
   function handleLocation() {
     let la;
@@ -69,18 +71,17 @@ const AddressInformation = forwardRef((props, ref) => {
               //     value:'20'
               //   }
               // }
-          //  let e =   new Event('target',{name:"lat", value:"20"})
+              //  let e =   new Event('target',{name:"lat", value:"20"})
               //handleChange(latEvent);
               addressData.lat = la;
               addressData.lon = lo;
               setAddressData({ ...addressData });
               prevInfo = {
-                lat:la,
-                lon:lo
-              }
-              setPrevInfo({...prevInfo})
+                lat: la,
+                lon: lo,
+              };
+              setPrevInfo({ ...prevInfo });
               console.log(addressData);
-              
             }
           },
           (error) => console.log(error)
@@ -152,7 +153,7 @@ const AddressInformation = forwardRef((props, ref) => {
           <TextField
             id="lat"
             name="lat"
-            label="Lat"
+            label={latitude && prevInfo ? prevInfo.lat : "Lat"}
             fullWidth
             variant="standard"
             // value={latitude}
@@ -165,7 +166,7 @@ const AddressInformation = forwardRef((props, ref) => {
             <TextField
               id="lon"
               name="lon"
-              label="Lon"
+              label={longitude && prevInfo ? prevInfo.lon : "Lon"}
               fullWidth
               variant="standard"
               // value={longitude}

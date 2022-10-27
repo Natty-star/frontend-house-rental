@@ -29,45 +29,50 @@ export default function AllProperty() {
     getProperties();
   }, []);
 
-  function handleNearMe(){
-    let lat , long;
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
+  function handleNearMe() {
+    let lat, long;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
           if (position) {
             lat = position.coords.latitude;
-            long = position.coords.longitude; 
-            console.log("lat",lat);
-            console.log("long",long);
-          
-            axios.post('http://35.222.89.242:8081/api/property/nearby',{
-                x:long,
-                y:lat
-            
-             
-          }).then(response =>{
-            setData(response.data)
-          }).catch(err=>console.log(err))
+            long = position.coords.longitude;
+            console.log("lat", lat);
+            console.log("long", long);
+
+            axios
+              .post("http://35.222.89.242:8081/api/property/nearby", {
+                x: long,
+                y: lat,
+              })
+              .then((response) => {
+                setData(response.data);
+              })
+              .catch((err) => console.log(err));
           }
         },
-          (error) => console.log(error));
-      } else {
-        alert("Geolocation is not supported by this browser.");
-      }
-    
-  
+        (error) => console.log(error)
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
   }
   return (
     <>
       {/* <Header /> */}
 
-      
       <div className="container  custom-cards">
-      <Box sx={{ "& > :not(style)": { m: 1 } , textAlign:'right' }} mt={2} mb={0} onClick={handleNearMe}>
-        <Fab  variant="extended">
-          <LocationOnIcon sx={{ mr: 1 }} />
-          Find Near Me
-        </Fab>
-      </Box>
+        <Box
+          sx={{ "& > :not(style)": { m: 1 }, textAlign: "right" }}
+          mt={2}
+          mb={0}
+          onClick={handleNearMe}
+        >
+          <Fab variant="extended">
+            <LocationOnIcon sx={{ mr: 1 }} />
+            Find Near Me
+          </Fab>
+        </Box>
         <div className="row my-5">
           {data.length > 0 ? (
             data.map((row, index, arr) => {
@@ -80,18 +85,22 @@ export default function AllProperty() {
                       className="home__img"
                     ></img>
                     <h5 className="home__name">{row.propertyName}</h5>
-                    <div className="home__location">
-                      <p>{row.title}</p>
+                    <div className="mt-5 home__location">
+                      <p className="mb-0">{row.title} </p>
                     </div>
-                    <div className="home__rooms">
+                    {/* <div className="home__rooms">
                       <p>{"3"} rooms</p>
-                    </div>
+                    </div>*/}
                     <div className="home__area">
-                      <p>{row.address.street_number},</p>
-                      <p>{row.address.city}</p>
+                      <LocationOnIcon className="location__icon" />
+                      <p className="mb-0">{row.address.city}, </p>
+                      <p className="mb-0">{row.address.street_number} </p>
                     </div>
                     <div className="home__price">
-                      <p>${row.price}</p>
+                      <p>
+                        <span className="home_price_dollar">${row.price} </span>
+                        <span className="home_price_night">night</span>
+                      </p>
                     </div>
                     <button
                       className="btn home__btn"

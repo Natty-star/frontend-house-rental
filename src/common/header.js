@@ -119,7 +119,7 @@ export default function Header() {
   return (
     <>
       <header>
-        <div className="navbar navbar-light bg-light shadow-sm">
+        <div className="logo__container navbar navbar-light bg-light shadow-sm">
           <div className="container d-flex justify-content-between">
             <Link to="/" className="logo d-flex align-items-center">
               <strong className="heading-2 mr-5 pr-5">
@@ -135,7 +135,9 @@ export default function Header() {
                   textAlign: "center",
                 }}
               >
-                <Button color="primary" onClick={()=>navigate('/developers')}>Developers</Button>
+                <Button color="primary" onClick={() => navigate("/developers")}>
+                  Developers
+                </Button>
 
                 <Tooltip title="Account settings">
                   <IconButton

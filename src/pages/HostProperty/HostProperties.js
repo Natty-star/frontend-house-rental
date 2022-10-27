@@ -4,6 +4,7 @@ import { useNavigate, Route } from "react-router-dom";
 import axios from "axios";
 import Header from "../../common/header";
 import { CircularProgress } from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 export default function HostProperties() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -12,13 +13,17 @@ export default function HostProperties() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    const jwt = JSON.parse(localStorage.getItem('jwt'))
+    const jwt = JSON.parse(localStorage.getItem("jwt"));
     axios
-      .get("http://35.222.89.242:8081/api/property/getByEmail?userEmail="+user.email,{
-        headers:{
-          Authorization: 'Bearer ' + jwt
+      .get(
+        "http://35.222.89.242:8081/api/property/getByEmail?userEmail=" +
+          user.email,
+        {
+          headers: {
+            Authorization: "Bearer " + jwt,
+          },
         }
-      })
+      )
       .then((response) => {
         setData(response.data);
       })
@@ -44,18 +49,29 @@ export default function HostProperties() {
                       className="home__img"
                     ></img>
                     <h5 className="home__name">{row.propertyName}</h5>
-                    <div className="home__location">
-                      <p>{row.title}</p>
-                    </div>
-                    <div className="home__rooms">
-                      <p>${row.price}$</p>
+                    <div className="mt-5 home__location">
+                      <p className="mb-0">{row.title} </p>
                     </div>
                     <div className="home__area">
-                      <p>{row.address.street_number},</p>
-                      <p>{row.address.city}</p>
+                      <LocationOnIcon className="location__icon" />
+                      <p className="mb-0">{row.address.city}, </p>
+                      <p className="mb-0">{row.address.street_number} </p>
                     </div>
                     <div className="home__price">
-                      <p> {row.status ? "Occupied" : "Vacant"}</p>
+                      <p>
+                        <span className="home_price_dollar">${row.price} </span>
+                        <span className="home_price_night">night</span>
+                      </p>
+                    </div>
+                    <div className="home__price">
+                      <p
+                        className={
+                          row.status ? "home__occupied" : "home__vacant"
+                        }
+                      >
+                        {" "}
+                        {row.status ? "Occupied" : "Vacant"}
+                      </p>
                     </div>
                   </div>
                 </div>

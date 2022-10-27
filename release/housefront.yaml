@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: front-service
-          image: nattystar/house-rental:latest2
+          image: nattystar/house-rental:latest3
           imagePullPolicy: Always
           ports:
             - containerPort: 3000

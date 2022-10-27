@@ -67,7 +67,7 @@ jobs:
           push: true
           tags: nattystar/house-rental:latest
   Deploy:
-    needs: build
+    needs: [push_to_Docker_Hub]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: front-service
-          image: syilma/house-rental:v2
+          image: nattystar/house-rental:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3000

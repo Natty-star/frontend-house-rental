@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import Button from "@mui/material/Button";
 import addImage from "../../redux/actions/addImageAction";
 export default function ImageInformation() {

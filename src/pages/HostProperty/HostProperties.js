@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, Route } from "react-router-dom";
-import axios from "axios";
 import Header from "../../common/header";
 import { CircularProgress } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { instance } from "../../index";
 export default function HostProperties() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -14,16 +14,12 @@ export default function HostProperties() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     const jwt = JSON.parse(localStorage.getItem("jwt"));
-    axios
-      .get(
-        "http://35.222.89.242:8081/api/property/getByEmail?userEmail=" +
-          user.email,
-        {
-          headers: {
-            Authorization: "Bearer " + jwt,
-          },
-        }
-      )
+    instance
+      .get("/property/getByEmail?userEmail=" + user.email, {
+        headers: {
+          Authorization: "Bearer " + jwt,
+        },
+      })
       .then((response) => {
         setData(response.data);
       })

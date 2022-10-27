@@ -17,9 +17,9 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import { useEffect } from "react";
-import axios from "axios";
 import Header from "../../common/header";
 import { FormLabel } from "react-bootstrap";
+import {instance} from "../../index"
 
 export default function Profile() {
   const [userState, setUserState] = useState({});
@@ -31,8 +31,8 @@ export default function Profile() {
   const [jwt,setJwt] = useState(JSON.parse(localStorage.getItem("jwt")))
 
   useEffect(() => {
-    axios
-      .get("http://35.222.89.242:8081/api/accounts/"+ user.email , {
+    instance
+      .get("/accounts/"+ user.email , {
         headers: {
           Authorization: "Bearer " + jwt,
         },
@@ -68,8 +68,8 @@ export default function Profile() {
 
     console.log(updatedUser);
 
-    axios
-      .put("http://35.222.89.242:8081/api/accounts/"+ user.email, updatedUser,{
+    instance
+      .put("/accounts/"+ user.email, updatedUser,{
         headers:{
           Authorization: 'Bearer ' + jwt
         }

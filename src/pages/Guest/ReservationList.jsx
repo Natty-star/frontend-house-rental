@@ -9,11 +9,11 @@ import Divider from "@mui/material/Divider";
 import InboxIcon from "@mui/icons-material/Inbox";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import { useEffect } from "react";
-import axios from "axios";
 import { useState } from "react";
 import { Typography } from "@mui/material";
 import { useRef } from "react";
 import Header from "../../common/header";
+import {instance} from "../../index"
 
 export default function ReservationList() {
   const [property, setProperty] = React.useState([]);
@@ -26,8 +26,8 @@ export default function ReservationList() {
     setJwt(parsedJwt);
     const user = JSON.parse(localStorage.getItem('user'))
     const email = user.email;
-    axios
-      .get("http://35.222.89.242:8081/api/reservation/"+email,{
+    instance
+      .get("/reservation/"+email,{
         headers: {
           Authorization: "Bearer " + parsedJwt,
         }
@@ -80,9 +80,9 @@ export default function ReservationList() {
                         <ListItemButton
                           onClick={(event) => {
                         
-                            axios
+                            instance
                               .post(
-                                "http://35.222.89.242:8081/api/property/updateStatus",
+                                "/property/updateStatus",
                                 {
                                   id: row.id
                                 },

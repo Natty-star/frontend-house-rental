@@ -2,21 +2,23 @@ import * as React from "react";
 import Header from "../common/header";
 import { useEffect, useState } from "react";
 import { useNavigate, Route } from "react-router-dom";
-import axios from "axios";
-import { Box, CircularProgress, Fab } from "@mui/material";
+import { Box, CircularProgress, Fab, LinearProgress } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { textAlign } from "@mui/system";
+import { instance } from "../index";
+
 export default function AllProperty() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [data, setData] = useState([]);
+  const [fetchNear,setFetchNear] = useState(false)
 
   useEffect(() => {
     async function getProperties() {
       try {
-        const response = await axios.get(
-          "http://35.222.89.242:8081/api/property/available"
+        const response = await instance.get(
+          "/property/available"
         );
         console.log(response.data);
         setData(response.data);
@@ -30,6 +32,7 @@ export default function AllProperty() {
   }, []);
 
   function handleNearMe(){
+    setFetchNear(true);
     let lat , long;
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -39,12 +42,13 @@ export default function AllProperty() {
             console.log("lat",lat);
             console.log("long",long);
           
-            axios.post('http://35.222.89.242:8081/api/property/nearby',{
+            instance.post('/property/nearby',{
                 x:long,
                 y:lat
             
              
           }).then(response =>{
+            setFetchNear(false)
             setData(response.data)
           }).catch(err=>console.log(err))
           }
@@ -67,7 +71,13 @@ export default function AllProperty() {
           <LocationOnIcon sx={{ mr: 1 }} />
           Find Near Me
         </Fab>
-      </Box>
+        </Box>
+        {fetchNear ? (
+           <Box sx={{ width: '100%' }}>
+           <LinearProgress />
+         </Box>
+        ):null }
+     
         <div className="row my-5">
           {data.length > 0 ? (
             data.map((row, index, arr) => {

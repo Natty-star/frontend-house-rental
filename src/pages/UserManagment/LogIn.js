@@ -14,10 +14,10 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import {useEffect, useState} from 'react'
-import axios from "axios";
 import { useNavigate, Route } from "react-router-dom";
 import Header from '../../common/header';
 import jwt_decode from "jwt-decode";
+import { instance } from '../../index';
 
 const theme = createTheme();
 
@@ -31,7 +31,7 @@ export default function LogIn() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    axios.post('http://35.222.89.242:8081/api/authentication/authenticate', {
+    instance.post('/authentication/authenticate', {
         username : data.get('email'),
         password:data.get('password')
     }).then(response =>{

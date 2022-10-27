@@ -13,10 +13,10 @@ import AddressInformation from "./AddressInformation";
 import PropertyInformation from "./PropertyInformation";
 import ImageInformation from "./ImageInformation";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import Alert from '@mui/material/Alert';
 import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import Header from "../../common/header";
+import { instance } from "../../index";
 
 const theme = createTheme();
 
@@ -78,11 +78,11 @@ export default function PropertyStepper(props) {
          "Access-Control-Allow-Origin": "*"
         },
     };
-    let url ="http://35.222.89.242:8081/api/property/create";
+    let url ="/property/create";
     console.log(formData.get('latitude'));
     console.log(formData.get('propertyName'));
     
-    axios.post(url,formData,config).then(response =>{
+    instance.post(url,formData,config).then(response =>{
       console.log(response.data);
       setIsSuccess(true)
       setIsError(false)

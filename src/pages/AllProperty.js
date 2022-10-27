@@ -30,7 +30,31 @@ export default function AllProperty() {
   }, []);
 
   function handleNearMe(){
-    // axios.get('http://35.222.89.242:8081/api/property/')
+    let lat , long;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          if (position) {
+            lat = position.coords.latitude;
+            long = position.coords.longitude; 
+            console.log("lat",lat);
+            console.log("long",long);
+          
+            axios.post('http://35.222.89.242:8081/api/property/nearby',{
+                x:long,
+                y:lat
+            
+             
+          }).then(response =>{
+            setData(response.data)
+          }).catch(err=>console.log(err))
+          }
+        },
+          (error) => console.log(error));
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    
+  
   }
   return (
     <>

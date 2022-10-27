@@ -21,14 +21,16 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from "react";
+import PersonIcon from "@mui/icons-material/Person";
+import { Toolbar } from "@mui/material";
 export default function Header() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open1 = Boolean(anchorEl);
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const [role, setRole] = useState([])
+  const [role, setRole] = useState([]);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -69,7 +71,7 @@ export default function Header() {
   };
   const handleHost = () => {
     navigate("/PropertyStepper");
-  }
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,45 +80,42 @@ export default function Header() {
     setAnchorEl(null);
   };
 
-  const handleLogout = () =>{
-    localStorage.removeItem("user")
-    localStorage.removeItem("jwt")
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("jwt");
     navigate("/login");
-  }
+  };
 
   const handleMyReservation = () => {
-    navigate('/MYProperty')
-  }
+    navigate("/MYProperty");
+  };
 
   const handleMyHost = () => {
-    navigate('/hostProperties')
-  }
+    navigate("/hostProperties");
+  };
 
   const handleMyProfile = () => {
-    navigate('/profile')
-  }
+    navigate("/profile");
+  };
 
   const [firstLetter, setFirstLetter] = useState("");
   const [logedin, setLogedin] = useState(false);
 
   useEffect(() => {
-    let localValue = JSON.parse(localStorage.getItem('user'))
+    let localValue = JSON.parse(localStorage.getItem("user"));
     // if(!localValue){
     //   navigate("/");
     // }
-    if(localValue){
-      setFirstLetter(localValue.firstName[0].toUpperCase() )
-      let roles = []
-      for(const element of localValue.roles){
-        roles.push(element.name)
+    if (localValue) {
+      setFirstLetter(localValue.firstName[0].toUpperCase());
+      let roles = [];
+      for (const element of localValue.roles) {
+        roles.push(element.name);
       }
-      console.log(roles)
-      setRole(roles)
-      setLogedin(true)
+      setRole(roles);
+      setLogedin(true);
     }
-    
-    
-  },[])
+  }, []);
   return (
     <>
       <header>
@@ -136,7 +135,8 @@ export default function Header() {
                   textAlign: "center",
                 }}
               >
-                <Typography sx={{ minWidth: 100 }}>Contact</Typography>
+                <Button color="primary" onClick={()=>navigate('/developers')}>Developers</Button>
+
                 <Tooltip title="Account settings">
                   <IconButton
                     onClick={handleClick}
@@ -146,7 +146,13 @@ export default function Header() {
                     aria-haspopup="true"
                     aria-expanded={open1 ? "true" : undefined}
                   >
-                    <Avatar sx={{ width: 32, height: 32 }}>{firstLetter}</Avatar>
+                    {!firstLetter ? (
+                      <PersonIcon color="primary" />
+                    ) : (
+                      <Avatar sx={{ width: 32, height: 32 }}>
+                        {firstLetter}
+                      </Avatar>
+                    )}
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -185,48 +191,56 @@ export default function Header() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                {logedin === true ? null : <MenuItem onClick={handleLogIn}>
-                  <ListItemIcon>
-                    <LoginIcon fontSize="small" />
-                  </ListItemIcon>
-                  Log in
-                </MenuItem>}
-                {logedin === true ? null : <MenuItem onClick={handleSignUp}>
-                  <Avatar />
-                  Sign up
-                </MenuItem>}
-                {role.includes("admin") ? <MenuItem onClick={handleHost}>
-                  
-                  Host your Home
-                </MenuItem>: null}
-                {role.includes("admin") ? <MenuItem onClick={handleMyHost}>
-                  
-                  My Hosts
-                </MenuItem>: null}
-                {role.includes("user") ? <MenuItem onClick={handleMyReservation}>
-                  
-                  My Reservation
-                </MenuItem>: null}
-                {role.includes("user") ? <MenuItem onClick={handleMyProfile}>
-                  <ListItemIcon>
-                    <Settings fontSize="small" />
-                  </ListItemIcon>
-                  Profile
-                </MenuItem>:null}
+                {logedin === true ? null : (
+                  <MenuItem onClick={handleLogIn}>
+                    <ListItemIcon>
+                      <LoginIcon fontSize="small" />
+                    </ListItemIcon>
+                    Log in
+                  </MenuItem>
+                )}
+                {logedin === true ? null : (
+                  <MenuItem onClick={handleSignUp}>
+                    <Avatar />
+                    Sign up
+                  </MenuItem>
+                )}
+                {role.includes("admin") ? (
+                  <MenuItem onClick={handleHost}>Host your Home</MenuItem>
+                ) : null}
+                {role.includes("admin") ? (
+                  <MenuItem onClick={handleMyHost}>My Hosts</MenuItem>
+                ) : null}
+                {role.includes("user") ? (
+                  <MenuItem onClick={handleMyReservation}>
+                    My Reservation
+                  </MenuItem>
+                ) : null}
+                {role.includes("user") ? (
+                  <MenuItem onClick={handleMyProfile}>
+                    <ListItemIcon>
+                      <Settings fontSize="small" />
+                    </ListItemIcon>
+                    Profile
+                  </MenuItem>
+                ) : null}
 
-                {role.includes("ADMIN") ? <MenuItem >
-                  <ListItemIcon>
-                    <Settings fontSize="small" />
-                  </ListItemIcon>
-                  UserList
-                </MenuItem>:null}
-                {logedin === false ? null : 
-                <MenuItem onClick={handleLogout}>
-                  <ListItemIcon>
-                    <Logout fontSize="small" />
-                  </ListItemIcon>
-                  Logout
-                </MenuItem>}
+                {role.includes("ADMIN") ? (
+                  <MenuItem>
+                    <ListItemIcon>
+                      <Settings fontSize="small" />
+                    </ListItemIcon>
+                    UserList
+                  </MenuItem>
+                ) : null}
+                {logedin === false ? null : (
+                  <MenuItem onClick={handleLogout}>
+                    <ListItemIcon>
+                      <Logout fontSize="small" />
+                    </ListItemIcon>
+                    Logout
+                  </MenuItem>
+                )}
               </Menu>
             </React.Fragment>
           </div>

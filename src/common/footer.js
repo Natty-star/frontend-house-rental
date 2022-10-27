@@ -44,12 +44,12 @@ function Footer() {
             : theme.palette.grey[600],
       }}
     >
-      <Container maxWidth="sm">
+      {/* <Container maxWidth="sm">
         <Typography variant="body1">
           My sticky footer can be found here.
         </Typography>
         <Copyright />
-      </Container>
+      </Container> */}
     </Box>
   </Box>
   

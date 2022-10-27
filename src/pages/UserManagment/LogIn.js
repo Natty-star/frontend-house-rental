@@ -28,11 +28,8 @@ export default function LogIn() {
   const [loginError, setLoginError] = useState("");
 
   const handleSubmit = async(event) => {
-    console.log("here");
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    let token;
-
 
     axios.post('http://35.222.89.242:8081/api/authentication/authenticate', {
         username : data.get('email'),
@@ -54,7 +51,6 @@ export default function LogIn() {
   };
 
   useEffect(() => {
-    console.log('start')
     let localValue = localStorage.getItem('jwt')
     if(localValue){
       navigate("/");

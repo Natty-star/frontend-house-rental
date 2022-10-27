@@ -1,11 +1,9 @@
 import * as React from 'react';
 import Header from '../common/header';
-import Checkout from './Reservation/Checkout';
+
 import {useEffect, useState} from 'react'
 import { useNavigate, Route, useLocation } from "react-router-dom";
-import axios from "axios";
 import Reservation from './MyReservation/reservation';
-
 export default function PropertyImageList() {
 
   const { state } = useLocation()
@@ -33,9 +31,6 @@ export default function PropertyImageList() {
     }
   </div>
 
-
-    
-    {/* <Checkout id={state.property}/> */}
     <Reservation {...property}/>
 
 

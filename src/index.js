@@ -19,9 +19,13 @@ import HostProperties from './pages/HostProperty/HostProperties';
 import ReservationList from './pages/Guest/ReservationList';
 import Profile from './pages/Guest/Profile';
 import Developers from './pages/developers';
+import axios from 'axios';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+export const instance = axios.create({
+  baseURL:"http://35.222.89.242:8081/api"
+  })
 const store = configureStore();
 root.render(
   <Provider store={store}>

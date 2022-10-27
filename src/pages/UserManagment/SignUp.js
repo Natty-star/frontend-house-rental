@@ -13,7 +13,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate, Route } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,6 +20,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { validateEmail } from "../../validation";
 import Header from "../../common/header";
+import { instance } from "../../index";
+
 
 const theme = createTheme();
 
@@ -39,8 +40,8 @@ export default function SignUp() {
       data.get("password")
     ) {
       setValidEmail(true);
-      axios
-        .post("http://35.222.89.242:8081/api/accounts/register", {
+      instance
+        .post("/accounts/register", {
           email: data.get("email"),
           password: data.get("password"),
           address: { country: data.get("country") },

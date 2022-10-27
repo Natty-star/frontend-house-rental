@@ -22,7 +22,7 @@ import {
 import { Stack } from "react-bootstrap";
 import Moment from "moment";
 import { Alert, InputLabel, MenuItem, Select } from "@mui/material";
-import axios from "axios";
+import {instance} from "../../index";
 import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
@@ -56,7 +56,7 @@ export default function Reservation(props) {
             'paymentType:', paymentType,
             'paymentMethod:',paymentMethod
             );
-        axios.post("http://35.222.89.242:8081/api/reservation",{
+        instance.post("/reservation",{
             userEmail: user.email,
             propertyId: props.id,
             startDate: startDate,

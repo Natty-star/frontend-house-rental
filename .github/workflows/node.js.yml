@@ -65,7 +65,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: nattystar/house-rental:latest1
+          tags: nattystar/house-rental:latest2
   Deploy:
     needs: [push_to_Docker_Hub]
     runs-on: ubuntu-latest

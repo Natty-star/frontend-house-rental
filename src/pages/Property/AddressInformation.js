@@ -4,23 +4,19 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import {
-  useState,
-  forwardRef,
-  useImperativeHandle,
-  useEffect,
-  reset,
-} from "react";
+import { useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import addAddressInformation from "../../redux/actions/addAddressInformationAction";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { Box, display } from "@mui/system";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { CircularProgress } from "@mui/material";
 
 const AddressInformation = forwardRef((props, ref) => {
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+  const latRef = React.useRef();
+  const longRef = React.useRef();
   const [locationEnabled, setLocationEnabled] = useState(false);
+  const [isFetchedLocation, setIsFetchedLocation] = useState(true);
   const dispatch = useDispatch();
   const counter = useSelector((state) => state);
   let [prevInfo, setPrevInfo] = useState(
@@ -47,15 +43,11 @@ const AddressInformation = forwardRef((props, ref) => {
   useEffect(() => {
     dispatch(addAddressInformation(addressData));
   }, [addressData]);
-  useEffect(() => {
-    console.log("lat", latitude);
-    console.log("prevInfo", prevInfo);
-    dispatch(addAddressInformation(addressData));
-  }, [prevInfo]);
 
   function handleLocation() {
     let la;
     let lo;
+    setIsFetchedLocation(false);
     if (!locationEnabled) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -63,16 +55,7 @@ const AddressInformation = forwardRef((props, ref) => {
             if (position) {
               la = position.coords.latitude;
               lo = position.coords.longitude;
-              setLatitude(la);
-              setLongitude(lo);
-              // const latEvent = {
-              //   target:{
-              //     name:"lat",
-              //     value:'20'
-              //   }
-              // }
-              //  let e =   new Event('target',{name:"lat", value:"20"})
-              //handleChange(latEvent);
+
               addressData.lat = la;
               addressData.lon = lo;
               setAddressData({ ...addressData });
@@ -82,6 +65,10 @@ const AddressInformation = forwardRef((props, ref) => {
               };
               setPrevInfo({ ...prevInfo });
               console.log(addressData);
+              setLocationEnabled(true);
+              setIsFetchedLocation(true);
+              longRef.current.value = lo;
+              latRef.current.value = la;
             }
           },
           (error) => console.log(error)
@@ -89,11 +76,7 @@ const AddressInformation = forwardRef((props, ref) => {
       } else {
         alert("Geolocation is not supported by this browser.");
       }
-
-      setLocationEnabled(true);
     } else {
-      setLatitude(null);
-      setLongitude(null);
       setLocationEnabled(false);
     }
   }
@@ -153,11 +136,11 @@ const AddressInformation = forwardRef((props, ref) => {
           <TextField
             id="lat"
             name="lat"
-            label={latitude && prevInfo ? prevInfo.lat : "Lat"}
+            placeholder="Latitude"
             fullWidth
             variant="standard"
-            // value={latitude}
-            defaultValue={prevInfo ? prevInfo.lat : latitude}
+            inputRef={latRef}
+            defaultValue={prevInfo ? prevInfo.lat : null}
             onChange={handleChange}
           />
         </Grid>
@@ -166,13 +149,22 @@ const AddressInformation = forwardRef((props, ref) => {
             <TextField
               id="lon"
               name="lon"
-              label={longitude && prevInfo ? prevInfo.lon : "Lon"}
+              placeholder="Longitude"
               fullWidth
               variant="standard"
-              // value={longitude}
-              defaultValue={prevInfo ? prevInfo.lon : longitude}
+              inputRef={longRef}
+              defaultValue={prevInfo ? prevInfo.lon : null}
               onChange={handleChange}
             />
+            <div>
+              {isFetchedLocation ? null : (
+                <CircularProgress
+                  sx={{ color: "#FF385C", mr: 1, my: 0.5 }}
+                  size={15}
+                />
+              )}
+            </div>
+
             <div onClick={handleLocation}>
               {locationEnabled ? (
                 <LocationOnIcon sx={{ color: "#FF385C", mr: 1, my: 0.5 }} />

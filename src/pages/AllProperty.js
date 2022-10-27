@@ -12,14 +12,12 @@ export default function AllProperty() {
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [data, setData] = useState([]);
-  const [fetchNear,setFetchNear] = useState(false)
+  const [fetchNear, setFetchNear] = useState(false);
 
   useEffect(() => {
     async function getProperties() {
       try {
-        const response = await instance.get(
-          "/property/available"
-        );
+        const response = await instance.get("/property/available");
         console.log(response.data);
         setData(response.data);
       } catch (error) {
@@ -31,53 +29,58 @@ export default function AllProperty() {
     getProperties();
   }, []);
 
-  function handleNearMe(){
+  function handleNearMe() {
     setFetchNear(true);
-    let lat , long;
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
+    let lat, long;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
           if (position) {
             lat = position.coords.latitude;
-            long = position.coords.longitude; 
-            console.log("lat",lat);
-            console.log("long",long);
-          
-            instance.post('/property/nearby',{
-                x:long,
-                y:lat
-            
-             
-          }).then(response =>{
-            setFetchNear(false)
-            setData(response.data)
-          }).catch(err=>console.log(err))
+            long = position.coords.longitude;
+            console.log("lat", lat);
+            console.log("long", long);
+
+            instance
+              .post("/property/nearby", {
+                x: long,
+                y: lat,
+              })
+              .then((response) => {
+                setFetchNear(false);
+                setData(response.data);
+              })
+              .catch((err) => console.log(err));
           }
         },
-          (error) => console.log(error));
-      } else {
-        alert("Geolocation is not supported by this browser.");
-      }
-    
-  
+        (error) => console.log(error)
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
   }
   return (
     <>
       {/* <Header /> */}
 
-      
       <div className="container  custom-cards">
-      <Box sx={{ "& > :not(style)": { m: 1 } , textAlign:'right' }} mt={2} mb={0} onClick={handleNearMe}>
-        <Fab  variant="extended">
-          <LocationOnIcon sx={{ mr: 1 }} />
-          Find Near Me
-        </Fab>
+        <Box
+          sx={{ "& > :not(style)": { m: 1 }, textAlign: "right" }}
+          mt={2}
+          mb={0}
+          onClick={handleNearMe}
+        >
+          <Fab variant="extended">
+            <LocationOnIcon sx={{ mr: 1 }} />
+            Find Near Me
+          </Fab>
         </Box>
         {fetchNear ? (
-           <Box sx={{ width: '100%' }}>
-           <LinearProgress />
-         </Box>
-        ):null }
-     
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        ) : null}
+
         <div className="row my-5">
           {data.length > 0 ? (
             data.map((row, index, arr) => {
@@ -90,18 +93,22 @@ export default function AllProperty() {
                       className="home__img"
                     ></img>
                     <h5 className="home__name">{row.propertyName}</h5>
-                    <div className="home__location">
-                      <p>{row.title}</p>
+                    <div className="mt-5 home__location">
+                      <p className="mb-0">{row.title} </p>
                     </div>
-                    <div className="home__rooms">
+                    {/* <div className="home__rooms">
                       <p>{"3"} rooms</p>
-                    </div>
+                    </div>*/}
                     <div className="home__area">
-                      <p>{row.address.street_number},</p>
-                      <p>{row.address.city}</p>
+                      <LocationOnIcon className="location__icon" />
+                      <p className="mb-0">{row.address.city}, </p>
+                      <p className="mb-0">{row.address.street_number} </p>
                     </div>
                     <div className="home__price">
-                      <p>${row.price}</p>
+                      <p>
+                        <span className="home_price_dollar">${row.price} </span>
+                        <span className="home_price_night">night</span>
+                      </p>
                     </div>
                     <button
                       className="btn home__btn"

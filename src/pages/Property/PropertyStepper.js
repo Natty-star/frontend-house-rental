@@ -13,15 +13,14 @@ import AddressInformation from "./AddressInformation";
 import PropertyInformation from "./PropertyInformation";
 import ImageInformation from "./ImageInformation";
 import { useDispatch, useSelector } from "react-redux";
-import Alert from '@mui/material/Alert';
-import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
+import Alert from "@mui/material/Alert";
+import { useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import Header from "../../common/header";
 import { instance } from "../../index";
 
 const theme = createTheme();
 
 export default function PropertyStepper(props) {
-  ;
   const [IsSuccess, setIsSuccess] = useState(false);
   const [IsError, setIsError] = useState(false);
   const [ErrorMessage, setErrorMessage] = useState("");
@@ -37,20 +36,17 @@ export default function PropertyStepper(props) {
   let ImageLIst = counter.propertyImage[counter.propertyImage.length - 1];
 
   const handleSubmit = () => {
-   const user = JSON.parse(localStorage.getItem('user'));
-   const jwt = JSON.parse(localStorage.getItem('jwt'));
-  
+    const user = JSON.parse(localStorage.getItem("user"));
+    const jwt = JSON.parse(localStorage.getItem("jwt"));
+
     let formData = new FormData();
-    
 
     if (propertyInfo !== undefined) {
-      formData.append("userEmail",user.email );
+      formData.append("userEmail", user.email);
       formData.append("propertyName", propertyInfo.propertyName);
       formData.append("price", propertyInfo.price);
       formData.append("title", propertyInfo.title);
       formData.append("status", false);
-      
-
     }
 
     if (addressInfo !== undefined) {
@@ -65,34 +61,36 @@ export default function PropertyStepper(props) {
 
     if (ImageLIst !== undefined) {
       var count = Object.keys(ImageLIst).length;
-      for(var i = 0; i < count; i++){
-          formData.append('images', ImageLIst[i].Attachement);
+      for (var i = 0; i < count; i++) {
+        formData.append("images", ImageLIst[i].Attachement);
       }
     }
 
     const config = {
-      
       headers: {
-         Authorization: 'Bearer ' + jwt,
-         "content-type": "multipart/form-data",
-         "Access-Control-Allow-Origin": "*"
-        },
+        Authorization: "Bearer " + jwt,
+        "content-type": "multipart/form-data",
+        "Access-Control-Allow-Origin": "*",
+      },
     };
-    let url ="/property/create";
-    console.log(formData.get('latitude'));
-    console.log(formData.get('propertyName'));
-    
-    instance.post(url,formData,config).then(response =>{
-      console.log(response.data);
-      setIsSuccess(true)
-      setIsError(false)
-      setTimeout(function(){
-              window.location.href = '/';
-           }, 3000);
-    }).catch(err => {
-      console.log(err)
-      setIsError(true)
-    })
+    let url = "/property/create";
+    console.log(formData.get("latitude"));
+    console.log(formData.get("propertyName"));
+
+    instance
+      .post(url, formData, config)
+      .then((response) => {
+        console.log(response.data);
+        setIsSuccess(true);
+        setIsError(false);
+        setTimeout(function () {
+          window.location.href = "/";
+        }, 3000);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsError(true);
+      });
 
     // axios
     //   .post(url, formData, config)
@@ -109,11 +107,9 @@ export default function PropertyStepper(props) {
     //     console.log(error);
     //     setIsError(true);
     //   });
-  
   };
 
   const handleNext = (newValues) => {
-    ;
     setActiveStep(activeStep + 1);
   };
 
@@ -137,20 +133,19 @@ export default function PropertyStepper(props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Header/>
+      <Header />
       <CssBaseline />
-    
+
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-      
         <Paper
+          className="reg-background"
           variant="outlined"
           sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
         >
           <Typography component="h1" variant="h4" align="center">
             Host your home
           </Typography>
-         
-         
+
           <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
             {steps.map((label) => (
               <Step key={label}>
@@ -158,13 +153,19 @@ export default function PropertyStepper(props) {
               </Step>
             ))}
           </Stepper>
-       
+
           <React.Fragment>
-            {IsError &&  <Alert severity="error">Something went wrong! Please try Again.</Alert>}
+            {IsError && (
+              <Alert severity="error">
+                Something went wrong! Please try Again.
+              </Alert>
+            )}
             {IsSuccess === true ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
-               <Alert severity="success">Your Property successfully submited! Thank you!</Alert>
+                  <Alert severity="success">
+                    Your Property successfully submited! Thank you!
+                  </Alert>
                 </Typography>
               </React.Fragment>
             ) : (

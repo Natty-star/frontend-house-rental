@@ -13,15 +13,11 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { CircularProgress } from "@mui/material";
 
 const AddressInformation = forwardRef((props, ref) => {
-  const latRef = React.useRef()
-  const longRef = React.useRef()
-  const [locationEnabled, setLocationEnabled] = useState(false);
-  const [isFetchedLocation,setIsFetchedLocation] = useState(true)
   const dispatch = useDispatch();
   const counter = useSelector((state) => state);
-  let [prevInfo,setPrevInfo] = useState(
+  let [prevInfo, setPrevInfo] = useState(
     counter.addressInformation[counter.addressInformation.length - 1]
-  )
+  );
 
   const [addressData, setAddressData] = useState({
     country: prevInfo ? prevInfo.country : null,
@@ -34,24 +30,17 @@ const AddressInformation = forwardRef((props, ref) => {
   });
   const handleChange = (event) => {
     const { name, value } = event.target;
-    console.log(value)
+    console.log(value);
     setAddressData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-    
-   
   };
-  useEffect(()=>{
-    dispatch(addAddressInformation(addressData));
-
-  },[addressData])
-
 
   function handleLocation() {
     let la;
     let lo;
-    setIsFetchedLocation(false)
+
     if (!locationEnabled) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -64,17 +53,12 @@ const AddressInformation = forwardRef((props, ref) => {
               addressData.lon = lo;
               setAddressData({ ...addressData });
               prevInfo = {
-                lat:la,
-                lon:lo
-              }
-              setPrevInfo({...prevInfo})
+                lat: la,
+                lon: lo,
+              };
+              setPrevInfo({ ...prevInfo });
               console.log(addressData);
               setLocationEnabled(true);
-              setIsFetchedLocation(true)
-              longRef.current.value = lo;
-              latRef.current.value = la;
-
-              
             }
           },
           (error) => console.log(error)
@@ -163,9 +147,7 @@ const AddressInformation = forwardRef((props, ref) => {
               onChange={handleChange}
             />
             <div>
-              {isFetchedLocation ? null : (<CircularProgress  sx={{ color: "#FF385C", mr: 1, my: 0.5 }} size={15}/>) }
-            </div>
-            
+
             <div onClick={handleLocation}>
               {locationEnabled ? (
                 <LocationOnIcon sx={{ color: "#FF385C", mr: 1, my: 0.5 }} />

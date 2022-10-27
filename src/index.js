@@ -19,7 +19,7 @@ import axios from "axios";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 export const instance = axios.create({
-  baseURL: "http://35.22.98.242:8081/api", //35.222.89.242
+  baseURL: "http://35.222.89.242:8081/api", //35.222.89.242
 });
 const store = configureStore();
 root.render(

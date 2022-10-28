@@ -13,10 +13,6 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { CircularProgress } from "@mui/material";
 
 const AddressInformation = forwardRef((props, ref) => {
-  const latRef = React.useRef();
-  const longRef = React.useRef();
-  const [locationEnabled, setLocationEnabled] = useState(false);
-  const [isFetchedLocation, setIsFetchedLocation] = useState(true);
   const dispatch = useDispatch();
   const counter = useSelector((state) => state);
   let [prevInfo, setPrevInfo] = useState(
@@ -40,14 +36,11 @@ const AddressInformation = forwardRef((props, ref) => {
       [name]: value,
     }));
   };
-  useEffect(() => {
-    dispatch(addAddressInformation(addressData));
-  }, [addressData]);
 
   function handleLocation() {
     let la;
     let lo;
-    setIsFetchedLocation(false);
+
     if (!locationEnabled) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -66,9 +59,6 @@ const AddressInformation = forwardRef((props, ref) => {
               setPrevInfo({ ...prevInfo });
               console.log(addressData);
               setLocationEnabled(true);
-              setIsFetchedLocation(true);
-              longRef.current.value = lo;
-              latRef.current.value = la;
             }
           },
           (error) => console.log(error)
@@ -157,23 +147,17 @@ const AddressInformation = forwardRef((props, ref) => {
               onChange={handleChange}
             />
             <div>
-              {isFetchedLocation ? null : (
-                <CircularProgress
-                  sx={{ color: "#FF385C", mr: 1, my: 0.5 }}
-                  size={15}
-                />
-              )}
-            </div>
 
             <div onClick={handleLocation}>
               {locationEnabled ? (
                 <LocationOnIcon sx={{ color: "#FF385C", mr: 1, my: 0.5 }} />
               ) : (
                 <LocationOnOutlinedIcon
-                  sx={{ color: "#FF385C", mr: 1, my: 0.5 }}
+                  sx={{ color: "#FF385C", mr: 1, my: 0.5 }} 
                 />
               )}
             </div>
+            
           </Box>
         </Grid>
 

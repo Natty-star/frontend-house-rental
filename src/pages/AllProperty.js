@@ -20,7 +20,7 @@ export default function AllProperty() {
         const response = await instance.get("/property/available");
         console.log(response.data);
         setData(response.data);
-      } catch (error) {
+      } catch (error {
         setLoginError("You have entered invalid username or password!");
         console.log(error);
         setLoading(false);
